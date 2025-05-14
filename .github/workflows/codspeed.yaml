@@ -1,0 +1,52 @@
+name: 🔂 Unit tests
+
+concurrency:
+  group: ${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+    paths:
+      - "strawberry/**"
+      - "tests/**"
+      - "noxfile.py"
+      - "pyproject.toml"
+      - "poetry.lock"
+      - ".github/workflows/test.yml"
+  workflow_dispatch:
+
+
+jobs:
+  benchmarks:
+    name: 📈 Benchmarks
+
+    runs-on: codspeed-macro-staging
+
+    steps:
+      - uses: actions/checkout@v4
+      - run: pipx install poetry
+      - uses: actions/setup-python@v5
+        id: setup-python
+        with:
+          python-version: "3.12"
+          architecture: x64
+          cache: "poetry"
+
+      - run: poetry env use 3.12
+      - run: poetry install
+        if: steps.setup-python.outputs.cache-hit != 'true'
+
+      - name: Run benchmarks
+        uses: CodSpeedHQ/action@v3.2.0
+        env:
+          CODSPEED_LOG: debug
+          CODSPEED_USE_PERF: true
+          CODSPEED_RUNNER_MODE: "walltime"
+        with:
+          token: ${{ secrets.CODSPEED_TOKEN }}
+          run: poetry run pytest tests/benchmarks --codspeed
+          runner-version: 3.6.0-beta.3
+          upload-url: https://api.staging.preview.codspeed.io/upload
