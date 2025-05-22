@@ -70,7 +70,8 @@ pygments = "^2.3"
 pyinstrument = { version = ">=4.0.0", optional = false }
 pytest = "^7.2"
 pytest-asyncio = ">=0.20.3"
-pytest-codspeed = { version = ">=3.0.0", python = ">=3.9" }
+pytest-codspeed = { git = "https://github.com/CodSpeedHQ/pytest-codspeed/", branch = "cod-732-support-perf-profiling-in-python-walltime" }
+# pytest-codspeed = { version = ">=3.0.0", python = ">=3.9" }
 pytest-cov = "^4.0.0"
 pytest-emoji = "^0.2.0"
 pytest-mock = "^3.10"
