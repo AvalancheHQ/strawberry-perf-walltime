@@ -19,7 +19,8 @@ jobs:
   benchmarks:
     name: 📈 Benchmarks
 
-    runs-on: codspeed-macro-staging
+    runs-on: ubuntu-22.04
+    # runs-on: codspeed-macro-staging
 
     steps:
       - uses: actions/checkout@v4
